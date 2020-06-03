@@ -1,4 +1,4 @@
-![](https://github.com/facebookincubator/MY_ENUM/workflows/ci/badge.svg)
+![CI](https://github.com/facebookincubator/MY_ENUM/workflows/CI/badge.svg)
 
 # MY_ENUM
 
