@@ -18,6 +18,14 @@ jobs:
     - name: Install dependencies (Linux)
       run: |
         sudo apt install libboost-system-dev
+        git clone https://github.com/google/googletest
+        cd googletest
+        mkdir build
+        cd build
+        cmake ..
+        make
+        sudo make install
+        cd ../..
         git clone https://github.com/fmtlib/fmt.git
         cd fmt
         git checkout 6.2.1
@@ -40,8 +48,15 @@ jobs:
 
     - name: Install dependencies (MacOs)
       run: |
-        brew update
         brew install boost
+        git clone https://github.com/google/googletest
+        cd googletest
+        mkdir build
+        cd build
+        cmake ..
+        make
+        sudo make install
+        cd ../..
         git clone https://github.com/fmtlib/fmt.git
         cd fmt
         git checkout 6.2.1
