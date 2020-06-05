@@ -2,7 +2,8 @@
 
 # MY_ENUM
 
-MY_ENUM is a ... and solves ...
+MY_ENUM is a small c++ macro library to add compile-time introspection to c++ 
+enum classes.
 
 ## Examples
 ...

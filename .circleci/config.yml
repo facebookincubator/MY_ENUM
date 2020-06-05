@@ -1,0 +1,17 @@
+version: 2.1
+jobs:
+  build:
+    macos:
+      xcode: 11.3.0
+
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: scripts/install_osx_deps.sh
+      - run:
+          name: Build
+          command: scripts/configure_and_build.sh
+      - run:
+          name: Test
+          command: scripts/run_tests.sh
