@@ -11,13 +11,14 @@
 
 #define MY_ENUMFLAGS_OSTREAM_OVERLOAD(NAME)                             \
   namespace enum_wrapper_ {                                             \
-  inline std::ostream& operator<<(std::ostream& os, NAME##Impl value) { \
+  inline std::ostream &operator<<(std::ostream &os, NAME##Impl value) { \
     os << toPretty(value);                                              \
     return os;                                                          \
   }                                                                     \
-  } // namespace enum_wrapper_
+  }  // namespace enum_wrapper_
 
-// Convenience marco which defines the enum flags plus alias and adds the ostream overload.
+// Convenience marco which defines the enum flags plus alias and adds the
+// ostream overload.
 #define MY_ENUMFLAGS_O(EnumName, UINT_TYPE, ...)  \
   MY_ENUMFLAGS(EnumName, UINT_TYPE, __VA_ARGS__); \
   MY_ENUMFLAGS_OSTREAM_OVERLOAD(EnumName)

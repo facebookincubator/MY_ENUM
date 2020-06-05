@@ -13,7 +13,7 @@
 #define MY_ENUM_HAS_CPP_17() 0
 #endif
 
-#else // !_MSC_VER
+#else  // !_MSC_VER
 
 #if __cplusplus <= 201402L
 #define MY_ENUM_HAS_CPP_17() 0
@@ -21,14 +21,14 @@
 #define MY_ENUM_HAS_CPP_17() 1
 #endif
 
-#endif // !_MSC_VER
+#endif  // !_MSC_VER
 
 #if MY_ENUM_HAS_CPP_17()
 
 #define MY_ENUM_NODISCARD [[nodiscard]]
 #define MY_ENUM_MAYBE_UNUSED [[maybe_unused]]
 
-#else // !HAS_CPP_17()
+#else  // !HAS_CPP_17()
 
 #ifdef __has_cpp_attribute
 
@@ -45,13 +45,13 @@
 #define MY_ENUM_MAYBE_UNUSED [[gnu::unused]]
 #endif
 
-#else // !__has_cpp_attribute
+#else  // !__has_cpp_attribute
 
 #ifdef _MSC_VER
 #define NODISCARD _Check_return_
 #endif
 
-#endif // !__has_cpp_attribute
+#endif  // !__has_cpp_attribute
 
 //
 // Fallbacks in case above logic doesn't trigger: empty defines.
@@ -65,4 +65,4 @@
 #define MY_ENUM_MAYBE_UNUSED
 #endif
 
-#endif // !MY_ENUM_HAS_CPP_17()
+#endif  // !MY_ENUM_HAS_CPP_17()

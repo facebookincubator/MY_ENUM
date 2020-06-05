@@ -9,17 +9,28 @@
 
 #include "impl/EnumDetails.h"
 
-/* Enum type definition. Can be in global, and namespace scope only. See MY_ENUM for details. */
-#define MY_ENUM_DEF(EnumName, ...) MY_ENUM_DEF_IMPL(EnumName, __VA_ARGS__)
+/* MY_ENUM_DEF(NAME, [INT_TYPE], ARGS ...)
 
-/* Enum type alias. Can be in any scope. See MY_ENUM for details. */
-#define MY_ENUM_ALIAS(EnumName) using EnumName = enum_wrapper_::EnumName##Impl
+  Enum type definition. Can be in global, and namespace scope only. See MY_ENUM
+  below for details. */
+#define MY_ENUM_DEF(NAME, ...) MY_ENUM_DEF_IMPL(NAME, __VA_ARGS__)
 
-/* Enum type. Can be in global, and namespace scope only.
+/* MY_ENUM_ALIAS(NAME)
 
-  For example ``MY_ENUM(Enums, int, (foo, bar));`` defines an enum class
+  Enum type alias. Can be in any scope. See MY_ENUM below for details. */
+#define MY_ENUM_ALIAS(NAME) using NAME = enum_wrapper_::NAME##Impl
 
-    enum class Enums : int {
+/* MY_ENUM(NAME, [INT_TYPE], ARGS ...)
+  Enum type. Can be in global, and namespace scope only.
+
+      NAME:     Name of the enum class.
+      INT_TYPE: integral type, optional argument which defaults to ``int``.
+      ARGS:     Tuple of enums. Could be just names, such as (foo, bar), or
+                also name/value pairs, such as ((one,1), (two,2)).
+
+  For example ``MY_ENUM(FooBar, int, (foo, bar));`` defines an enum class
+
+    enum class FooBar : int {
       foo,
       bar
     };
@@ -28,57 +39,66 @@
 
     // Returns corresponding string of given value
     //
-    // Preconditions: value must be a valid enum value, i.e. Enums::foo, or Enums::bar.
+    // Preconditions: value must be a valid enum value, i.e. FooBar::foo, or
+    //                FooBar::bar.
     //
-    std::string toString(Enums value);
+    std::string toString(FooBar value);
 
     // Returns corresponding string view of given value
     //
-    // Preconditions: value must be a valid enum value, i.e. Enums::foo, or Enums::bar.
+    // Preconditions: value must be a valid enum value, i.e. FooBar::foo, or
+    //                FooBar::bar.
     //
-    constexpr folly::StringPiece toString(Enums value);
+    string_view toStringView(FooBar value);
 
     // Returns pretty string representation of given value
     //
-    // Preconditions: value must be a valid enum value, i.e. Enums::foo, or Enums::bar.
+    // Preconditions: value must be a valid enum value, i.e. FooBar::foo, or
+    //                FooBar::bar.
     //
-    std::string toPretty(Enums value);
+    std::string toPretty(FooBar value);
 
-    // Sets enum given corresponding string, if string is valid (i.e. "foo" or "bar").
-    // Returns false otherwise.
+    // Sets enum given corresponding string, if string is valid (i.e. "foo" or
+    // "bar"). Returns false otherwise.
     //
-    bool trySetFromString(Enums& value, std::string str);
+    bool trySetFromString(FooBar& value, std::string str);
 
     // Return count of enum type. First argument is needed for ADL only.
     //
-    size_t getCount(Enums) {
+    constexpr size_t getCount(FooBar) {
       return 2;
     }
 
     // Return string views of enum type. First argument is needed for ADL only.
-    constexpr std::array<folly::StringPiece, 2> getStrings(Enums) {
+    std::array<string_view, 2> getStrings(FooBar) {
       return {"foo", "bar"};
     }
 
+    // Return string of enum names. First argument is needed for ADL only.
+    std::array<string_view, 2> getStrings(FooBar) {
+      return "foo, bar";
+    }
+
     // Return values of enum type. First argument is needed for ADL only.
-    constexpr std::array<int, 2> getValues(Enums) {
+    constexpr std::array<int, 2> getValues(FooBar) {
       return {0, 1};
     }
 
-    // Returns the position of enum value in the enum class. This is the inverse of
-    // `getValues(Enums)[i]`.
-    size_t getPosition(Enums value) {
+    // Returns the position of enum value in the enum class. This is the inverse
+    // of `getValues(FooBar)[i]`.
+    constexpr size_t getPosition(FooBar value) {
       switch(value) {
-        case Enums::foo: { return 0; }
-        case Enums::bar: { return 1; }
+        case FooBar::foo: { return 0; }
+        case FooBar::bar: { return 1; }
       }
     }
 
-    // Return string representation of type name. First argument is needed for ADL only.
-    constexpr folly::StringPiece getTypeName(Enums) {
-      return "Enums";
+    // Return string representation of type name. First argument is needed for
+    // ADL only.
+    string_view getTypeName(FooBar) {
+      return "FooBar";
     }
 */
-#define MY_ENUM(EnumName, ...)       \
-  MY_ENUM_DEF(EnumName, __VA_ARGS__) \
-  MY_ENUM_ALIAS(EnumName)
+#define MY_ENUM(NAME, ...)       \
+  MY_ENUM_DEF(NAME, __VA_ARGS__) \
+  MY_ENUM_ALIAS(NAME)

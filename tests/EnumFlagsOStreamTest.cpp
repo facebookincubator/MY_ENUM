@@ -27,13 +27,13 @@ TEST(EnumTest, toString) {
 }
 
 TEST(EnumFlags, StringsAndValues) {
-  fmt::string_view typeName = getTypeName(MyFlags());
+  MY_ENUM_STRING_VIEW typeName = getTypeName(MyFlags());
   EXPECT_EQ(typeName, "MyFlags");
-  std::array<fmt::string_view, 3> strings = getNames(MyFlags());
+  std::array<MY_ENUM_STRING_VIEW, 3> strings = getNames(MyFlags());
   EXPECT_EQ(strings[0], "foo");
   EXPECT_EQ(strings[1], "bar");
   EXPECT_EQ(strings[2], "daz");
-  fmt::string_view stringOfStrings = getStringOfNames(MyFlags());
+  MY_ENUM_STRING_VIEW stringOfStrings = getStringOfNames(MyFlags());
   EXPECT_EQ(stringOfStrings, std::string("foo, bar, daz"));
   std::array<uint32_t, 3> values = getValues(MyFlags());
   EXPECT_EQ(values[0], 1);

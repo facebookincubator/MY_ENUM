@@ -30,7 +30,8 @@ TEST(EnumFlags, none) {
   EXPECT_FALSE(isSingleFlag(MyFlags::daz | MyFlags::foo));
 }
 
-MY_ENUMFLAGS(EightFlags, uint8_t, (bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7));
+MY_ENUMFLAGS(EightFlags, uint8_t,
+             (bit0, bit1, bit2, bit3, bit4, bit5, bit6, bit7));
 
 TEST(EnumFlags, bits) {
   EXPECT_EQ(uint8_t(EightFlags::none), 0);

@@ -7,16 +7,28 @@
 
 #include "impl/EnumFlagsDetails.h"
 
-/* Enum flags type definition. Can be in global, and namespace scope only. See MY_ENUMFLAGS for
- * details. */
-#define MY_ENUMFLAGS_DEF(NAME, UINT_TYPE, ...) MY_ENUMFLAGS_DEF_IMPL(NAME, UINT_TYPE, __VA_ARGS__)
+/* MY_ENUMFLAGS_DEF(NAME, UINT_TYPE, ARGS)
 
-/* Enum type alias. Can be in any scope. See MY_ENUMFLAGS for details. */
+  Enum flags type definition. Can be in global, and namespace scope only. See
+  MY_ENUMFLAGS below for details. */
+#define MY_ENUMFLAGS_DEF(NAME, UINT_TYPE, ...) \
+  MY_ENUMFLAGS_DEF_IMPL(NAME, UINT_TYPE, __VA_ARGS__)
+
+/* MY_ENUMFLAGS_ALIAS(NAME)
+
+  Enum type alias. Can be in any scope. See MY_ENUMFLAGS for details. */
 #define MY_ENUMFLAGS_ALIAS(NAME) using NAME = enum_wrapper_::NAME##Impl
 
-/* Enum flag type. Can be in global, and namespace scope only.
+/* MY_ENUMFLAGS(NAME, UINT_TYPE, ARGS)
 
-  For example ``MY_ENUMFLAGS(MyFlags, uint32_t, (foo, bar, daz));`` defines an enum class
+  Enum flag type. Can be in global, and namespace scope only.
+
+      NAME:      Name of the enum flag class.
+      UINT_TYPE: unsigned integral type.
+      ARGS:      Tuple of enums, such as (foo, bar, da).
+
+  For example ``MY_ENUMFLAGS(MyFlags, uint32_t, (foo, bar, daz));`` defines an
+  enum class
 
     enum class MyFlags : uint32_t {
       none = 0,
@@ -33,8 +45,8 @@
     // Bitwise and
     MyFlags operator&(MyFlags left, MyFlags right);
 
-    // Sets corresponding bit to 1, if string is single flag (i.e. "foo", "bar" or "daz").
-    // Returns false otherwise.
+    // Sets corresponding bit to 1, if string is single flag (i.e. "foo", "bar"
+    // or "daz"). Returns false otherwise.
     bool trySetFlagFromString(MyFlags& value, const std::string& str);
 
     // Return true if ``value`` contains all flags in ``mask``.
@@ -49,7 +61,8 @@
     // Toggle bits.
     void toggleMask(MyFlags& value, MyFlags mask);
 
-    // Returns true if value is a single flag (i.e. Foo::foo, Foo::bar or Foo::daz)
+    // Returns true if value is a single flag (i.e. Foo::foo, Foo::bar or
+    // Foo::daz)
     bool isSingleFlag(MyFlags value);
 
     // Returns string representation of enabled flags
@@ -66,12 +79,12 @@
     }
 
     // Returns array of names:
-    constexpr std::array<folly::StringPiece, 3> getNames(MyFlags) {
+    std::array<string_view, 3> getNames(MyFlags) {
       return {"foo", "bar", "daz"};
     }
 
     // Return string of names:
-    constexpr folly::StringPiece getStringOfNames(MyFlags) {
+    constexpr string_view getStringOfNames(MyFlags) {
       return "{foo, bar, daz}";
     }
 
@@ -80,11 +93,12 @@
       return {1, 2, 4};
     }
 
-    constexpr folly::StringPiece getTypeName(MyFlags) {
+    string_view getTypeName(MyFlags) {
       return "MyFlags";
     }
 
-   // Note: When adding new flags to an exisiting enum, we want to add this flag at the end.
+   // Note: When adding new flags to an exisiting enum, we want to add such flag
+   // at the end.
 
     MY_ENUMFLAGS(MyFlags, uint32_t, (foo, bar));
 
@@ -111,7 +125,8 @@
       daz = 4
     };
 
-    And hence the order of exiting flags (foo, bar) is respected and their values do not change.
+    And hence the order of exiting flags (foo, bar) is respected and their
+    values do not change.
 */
 #define MY_ENUMFLAGS(NAME, UINT_TYPE, ...)       \
   MY_ENUMFLAGS_DEF(NAME, UINT_TYPE, __VA_ARGS__) \

@@ -47,14 +47,14 @@ TEST(EnumTest, trySetFromString) {
 }
 
 TEST(EnumTest, StringsAndValues) {
-  fmt::string_view typeName = getTypeName(Fruits());
+  MY_ENUM_STRING_VIEW typeName = getTypeName(Fruits());
   EXPECT_EQ(typeName, "Fruits");
-  std::array<fmt::string_view, 3> strings = getStrings(Fruits());
+  std::array<MY_ENUM_STRING_VIEW, 3> strings = getStrings(Fruits());
   EXPECT_EQ(strings[0], "apple");
   EXPECT_EQ(strings[1], "banana");
   EXPECT_EQ(strings[2], "pear");
-  fmt::string_view stringOfStrings = getStringOfStrings(Fruits());
-  EXPECT_EQ(stringOfStrings, std::string("apple, banana, pear"));
+  MY_ENUM_STRING_VIEW stringOfNames = getStringOfNames(Fruits());
+  EXPECT_EQ(stringOfNames, std::string("apple, banana, pear"));
   std::array<size_t, 3> values = getValues(Fruits());
   EXPECT_EQ(values[0], 2);
   EXPECT_EQ(values[1], 3);

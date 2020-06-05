@@ -9,14 +9,16 @@
 
 MY_ENUM_O(MyEnum, int8_t, (foo, bar, daz));
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   MyEnum e;
   std::string input_str;
 
   CLI::App app{"Enum Example"};
 
-  app.add_option(
-         "--input", input_str, fmt::format("valid inputs are: {}", getStringOfStrings(MyEnum())))
+  auto view = getStringOfNames(MyEnum());
+  app.add_option("--input", input_str,
+                 std::string("valid inputs are: ") +
+                     std::string(view.begin(), view.end()))
       ->required();
   CLI11_PARSE(app, argc, argv);
 
