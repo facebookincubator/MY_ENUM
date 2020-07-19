@@ -128,15 +128,8 @@ cmake ..
 make -j2
 ```
 
-## How __________ works
-...
-
-## Full documentation
-...
-
-
 ## Join the MY_ENUM community
-* file issues here:
+* file issues here: [https://github.com/facebook/MY_ENUM/issues](https://github.com/facebook/MY_ENUM/issues)
 
 See the [CONTRIBUTING](CONTRIBUTING.md) file for how to help out.
 
