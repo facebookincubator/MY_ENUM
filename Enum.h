@@ -72,8 +72,8 @@
       return {"foo", "bar"};
     }
 
-    // Return string of enum names. First argument is needed for ADL only.
-    std::array<string_view, 2> getStrings(FooBar) {
+    // Return string view of enum names. First argument is needed for ADL only.
+    string_view getStringOfNames(FooBar) {
       return "foo, bar";
     }
 
