@@ -27,3 +27,18 @@
 #define MY_ENUM_DEF_O(EnumName, ...)  \
   MY_ENUM_DEF(EnumName, __VA_ARGS__); \
   MY_ENUM_OSTREAM_OVERLOAD(EnumName)
+
+// In Windows, MY_ENUM_O triggers harmless warning in boost macros
+// BOOST_PP_SEQ_DETAIL_IS_NOT_EMPTY and BOOST_PP_SEQ_DETAIL_EMPTY_SIZE:
+// "warning C4003: not enough arguments for function-like macro invocation".
+// Frustratingly, disabling the warning directly in in MY_ENUM_O won't actually
+// stop the compiler from reporting the warning; the caller needs to disable
+// the warning seperately.
+#if defined(_MSC_VER) && !defined(__clang__)
+#define DISABLE_MY_ENUM_O_WARNINGS \
+  __pragma(warning(push)) __pragma(warning(disable : 4003))
+#define ENABLE_MY_ENUM_O_WARNINGS __pragma(warning(pop))
+#else
+#define DISABLE_MY_ENUM_O_WARNINGS
+#define ENABLE_MY_ENUM_O_WARNINGS
+#endif
