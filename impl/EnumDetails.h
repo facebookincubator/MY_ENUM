@@ -90,10 +90,9 @@
 //   }
 #define MY_ENUM_DETAILS_OP_TO_PRETTY_CASE(dummy, types, PAIR)         \
   case BOOST_PP_TUPLE_ELEM(0, types)::BOOST_PP_TUPLE_ELEM(0, PAIR): { \
-    return BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR)) +         \
-           std::string(" (=") +                                       \
-           std::to_string(BOOST_PP_TUPLE_ELEM(1, types)(value)) +     \
-           std::string(")");                                          \
+    return BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR)) + std::string(" (=") +                              \
+        std::to_string(BOOST_PP_TUPLE_ELEM(1, types)(value)) +        \
+        std::string(")");                                             \
   }
 
 // Output:
@@ -113,11 +112,11 @@
 
 // Input: (A, (B,3), (C,5))
 // Output: "A", "B", "C"
-#define MY_ENUM_DETAILS_COMMA_SEP_STRINGS(...)                                 \
+#define MY_ENUM_DETAILS_COMMA_SEP_STRINGS(...)                                   \
   BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(                                      \
       0, BOOST_PP_SEQ_ELEM(0, MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__)))) \
-  BOOST_PP_SEQ_FOR_EACH(                                                       \
-      MY_ENUM_DETAILS_OP_COMMA_STRING, _,                                      \
+  BOOST_PP_SEQ_FOR_EACH(                                                         \
+      MY_ENUM_DETAILS_OP_COMMA_STRING, _,                                        \
       BOOST_PP_SEQ_POP_FRONT(MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__)))
 
 // Output: ", ${PAIR}[0]"
@@ -132,11 +131,11 @@
 
 // Input: (A, (B, 5), C)
 // Output: "A, B, C"
-#define MY_ENUM_DETAILS_CSV_STRING(...)                                        \
+#define MY_ENUM_DETAILS_CSV_STRING(...)                                          \
   BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(                                      \
       0, BOOST_PP_SEQ_ELEM(0, MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__)))) \
-  BOOST_PP_SEQ_FOR_EACH(                                                       \
-      MY_ENUM_DETAILS_OP_COMMA_VALUE_STRING, _,                                \
+  BOOST_PP_SEQ_FOR_EACH(                                                         \
+      MY_ENUM_DETAILS_OP_COMMA_VALUE_STRING, _,                                  \
       BOOST_PP_SEQ_POP_FRONT(MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__)))
 
 // Output: , ${TYPES}[1](${TYPES}[0]::${PAIR}[0])
@@ -166,8 +165,9 @@
                             MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                 \
                                 MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))       \
     }                                                                         \
-    MY_ENUM_ABORT(BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}", \
-                  MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));          \
+    MY_ENUM_ABORT(                                                            \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
   }                                                                           \
                                                                               \
   MY_ENUM_MAYBE_UNUSED inline MY_ENUM_STRING_VIEW toStringView(               \
@@ -177,8 +177,9 @@
                             MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                 \
                                 MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))       \
     }                                                                         \
-    MY_ENUM_ABORT(BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}", \
-                  MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));          \
+    MY_ENUM_ABORT(                                                            \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
   }                                                                           \
                                                                               \
   MY_ENUM_MAYBE_UNUSED inline std::string toPretty(NAME##Impl value) {        \
@@ -189,12 +190,13 @@
           MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                                   \
               MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))                         \
     }                                                                         \
-    MY_ENUM_ABORT(BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}", \
-                  MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));          \
+    MY_ENUM_ABORT(                                                            \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
   }                                                                           \
                                                                               \
   MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline bool trySetFromString(        \
-      NAME##Impl &value, const std::string &str) {                            \
+      NAME##Impl &value, const MY_ENUM_STRING_VIEW &str) {                    \
     BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_SET_VALUE_CASES, NAME##Impl,     \
                           MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                   \
                               MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))         \
@@ -236,8 +238,9 @@
                               MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(               \
                                   MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))     \
     }                                                                         \
-    MY_ENUM_ABORT(BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}", \
-                  MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));          \
+    MY_ENUM_ABORT(                                                            \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
   }                                                                           \
                                                                               \
   MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline MY_ENUM_STRING_VIEW           \

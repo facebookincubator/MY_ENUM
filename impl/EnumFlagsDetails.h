@@ -76,10 +76,9 @@
 //   if (hasMask(value, ${TYPE}::${FLAG})) {
 //      prettySet += "${FLAG}, ";
 //   }
-#define MY_ENUMFLAG_DETAILS_OP_STRING_FOR_FLAG(dummy1, TYPE, FLAG) \
-  if (hasMask(value, TYPE::FLAG)) {                                \
-    prettySet += BOOST_PP_STRINGIZE(FLAG) " (=" +                  \
-                 std::to_string(uint64_t(TYPE::FLAG)) + "), ";     \
+#define MY_ENUMFLAG_DETAILS_OP_STRING_FOR_FLAG(dummy1, TYPE, FLAG)  \
+  if (hasMask(value, TYPE::FLAG)) {                                 \
+    prettySet += BOOST_PP_STRINGIZE(FLAG) " (=" + std::to_string(uint64_t(TYPE::FLAG)) + "), "; \
   }
 
 // Output: ", ${STRING}"

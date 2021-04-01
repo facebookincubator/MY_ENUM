@@ -59,7 +59,7 @@
     // Sets enum given corresponding string, if string is valid (i.e. "foo" or
     // "bar"). Returns false otherwise.
     //
-    bool trySetFromString(FooBar& value, std::string str);
+    bool trySetFromString(FooBar& value, string_view str);
 
     // Return count of enum type. First argument is needed for ADL only.
     //
