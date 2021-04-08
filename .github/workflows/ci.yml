@@ -93,8 +93,8 @@ jobs:
         set -x # echo on
         cd $GITHUB_WORKSPACE
         git submodule update --init --recursive
-        cd tests/googletest
-        cd ../..
+        cd tests
+        cd ..
         mkdir build
         cd build
         cmake ..
@@ -105,8 +105,8 @@ jobs:
         set -x # echo on
         cd $GITHUB_WORKSPACE
         git submodule update --init --recursive
-        cd tests/googletest
-        cd ../..
+        cd tests
+        cd ..
         mkdir build
         cd build
         cmake .. -DUSE_FMT_STRING_VIEW=ON
@@ -122,4 +122,4 @@ jobs:
       run: |
         set -x # echo on
         cd $GITHUB_WORKSPACE/build
-        cmake --test .
+        make test
