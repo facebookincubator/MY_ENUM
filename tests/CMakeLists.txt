@@ -1,6 +1,5 @@
 set(MY_ENUM_TESTS EnumTest EnumOStreamTest EnumFlagsTest EnumFlagsOStreamTest)
 
-add_subdirectory(googletest)
 find_package(GTest REQUIRED)
 enable_testing()
 
