@@ -10,6 +10,7 @@
 #include <array>
 #include <string>
 
+#include <boost/algorithm/string/predicate.hpp>
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/if.hpp>
 #include <boost/preprocessor/punctuation/remove_parens.hpp>
@@ -108,6 +109,19 @@
     return true;                                                 \
   }
 
+// Output:
+//   if (boost::iequals(str.data(), "${PAIR}[0]")) {
+//     value = ${TYPE}::${PAIR}[0];
+//     return true;
+//   }
+#define MY_ENUM_DETAILS_OP_SET_VALUE_CASES_CASE_INSENSITIVE(dummy1, TYPE, \
+                                                            PAIR)         \
+  if (boost::iequals(str.data(),                                          \
+                     BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR)))) { \
+    value = TYPE::BOOST_PP_TUPLE_ELEM(0, PAIR);                           \
+    return true;                                                          \
+  }
+
 // Output: , "${PAIR}[0]"
 #define MY_ENUM_DETAILS_OP_COMMA_STRING(dummy1, dummy2, PAIR) \
   , BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR))
@@ -156,97 +170,107 @@
       MY_ENUM_DETAILS_OP_INTS, (TYPE, INT_TYPE),                               \
       BOOST_PP_SEQ_POP_FRONT(MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__)))
 
-#define MY_ENUM_DEF_IMPL(NAME, ...)                                           \
-  namespace enum_wrapper_ {                                                   \
-  enum class NAME##Impl : MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__){          \
-      MY_ENUM_DETAILS_CSV(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};            \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED inline std::string toString(NAME##Impl value) {        \
-    switch (value) {                                                          \
-      BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_TO_STRING_CASE, NAME##Impl,    \
-                            MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                 \
-                                MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))       \
-    }                                                                         \
-    MY_ENUM_ABORT(                                                            \
-        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
-                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED inline MY_ENUM_STRING_VIEW toStringView(               \
-      NAME##Impl value) {                                                     \
-    switch (value) {                                                          \
-      BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_TO_STRING_CASE, NAME##Impl,    \
-                            MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                 \
-                                MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))       \
-    }                                                                         \
-    MY_ENUM_ABORT(                                                            \
-        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
-                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED inline std::string toPretty(NAME##Impl value) {        \
-    switch (value) {                                                          \
-      BOOST_PP_SEQ_FOR_EACH(                                                  \
-          MY_ENUM_DETAILS_OP_TO_PRETTY_CASE,                                  \
-          (NAME##Impl, MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)),            \
-          MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                                   \
-              MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))                         \
-    }                                                                         \
-    MY_ENUM_ABORT(                                                            \
-        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
-                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline bool trySetFromString(        \
-      NAME##Impl &value, const MY_ENUM_STRING_VIEW &str) {                    \
-    BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_SET_VALUE_CASES, NAME##Impl,     \
-                          MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                   \
-                              MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))         \
-    return false;                                                             \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr size_t getCount(           \
-      NAME##Impl) {                                                           \
-    return BOOST_PP_TUPLE_SIZE(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__));        \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED                                                        \
-  MY_ENUM_NODISCARD inline std::array<                                        \
-      MY_ENUM_STRING_VIEW,                                                    \
-      BOOST_PP_TUPLE_SIZE(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))>             \
-  getStrings(NAME##Impl) {                                                    \
-    return {MY_ENUM_DETAILS_COMMA_SEP_STRINGS(                                \
-        MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};                              \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline MY_ENUM_STRING_VIEW           \
-  getStringOfNames(NAME##Impl) {                                              \
-    return MY_ENUM_DETAILS_CSV_STRING(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)); \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr std::array<                \
-      MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__),                              \
-      BOOST_PP_TUPLE_SIZE(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))>             \
-  getValues(NAME##Impl) {                                                     \
-    return {MY_ENUM_DETAILS_COMMA_SEP_INTS(                                   \
-        NAME##Impl, MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__),                \
-        MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};                              \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr size_t getPosition(        \
-      NAME##Impl value) {                                                     \
-    switch (value) {                                                          \
-      BOOST_PP_SEQ_FOR_EACH_I(MY_ENUM_DETAILS_OP_POSITION_ICASE, NAME##Impl,  \
-                              MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(               \
-                                  MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))     \
-    }                                                                         \
-    MY_ENUM_ABORT(                                                            \
-        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",           \
-                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value)); \
-  }                                                                           \
-                                                                              \
-  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline MY_ENUM_STRING_VIEW           \
-  getTypeName(NAME##Impl) {                                                   \
-    return BOOST_PP_STRINGIZE(NAME);                                          \
-  }                                                                           \
+#define MY_ENUM_DEF_IMPL(NAME, ...)                                            \
+  namespace enum_wrapper_ {                                                    \
+  enum class NAME##Impl : MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__){           \
+      MY_ENUM_DETAILS_CSV(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};             \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED inline std::string toString(NAME##Impl value) {         \
+    switch (value) {                                                           \
+      BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_TO_STRING_CASE, NAME##Impl,     \
+                            MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                  \
+                                MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))        \
+    }                                                                          \
+    MY_ENUM_ABORT(                                                             \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",            \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));  \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED inline MY_ENUM_STRING_VIEW toStringView(                \
+      NAME##Impl value) {                                                      \
+    switch (value) {                                                           \
+      BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_TO_STRING_CASE, NAME##Impl,     \
+                            MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                  \
+                                MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))        \
+    }                                                                          \
+    MY_ENUM_ABORT(                                                             \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",            \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));  \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED inline std::string toPretty(NAME##Impl value) {         \
+    switch (value) {                                                           \
+      BOOST_PP_SEQ_FOR_EACH(                                                   \
+          MY_ENUM_DETAILS_OP_TO_PRETTY_CASE,                                   \
+          (NAME##Impl, MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)),             \
+          MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                                    \
+              MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))                          \
+    }                                                                          \
+    MY_ENUM_ABORT(                                                             \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",            \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));  \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline bool trySetFromString(         \
+      NAME##Impl &value, const MY_ENUM_STRING_VIEW &str) {                     \
+    BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_SET_VALUE_CASES, NAME##Impl,      \
+                          MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                    \
+                              MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))          \
+    return false;                                                              \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline bool                           \
+  trySetFromStringCaseInsensitive(NAME##Impl &value,                           \
+                                  const MY_ENUM_STRING_VIEW &str) {            \
+    BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_SET_VALUE_CASES_CASE_INSENSITIVE, \
+                          NAME##Impl,                                          \
+                          MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                    \
+                              MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))          \
+    return false;                                                              \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr size_t getCount(            \
+      NAME##Impl) {                                                            \
+    return BOOST_PP_TUPLE_SIZE(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__));         \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED                                                         \
+  MY_ENUM_NODISCARD inline std::array<                                         \
+      MY_ENUM_STRING_VIEW,                                                     \
+      BOOST_PP_TUPLE_SIZE(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))>              \
+  getStrings(NAME##Impl) {                                                     \
+    return {MY_ENUM_DETAILS_COMMA_SEP_STRINGS(                                 \
+        MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};                               \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline MY_ENUM_STRING_VIEW            \
+  getStringOfNames(NAME##Impl) {                                               \
+    return MY_ENUM_DETAILS_CSV_STRING(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__));  \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr std::array<                 \
+      MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__),                               \
+      BOOST_PP_TUPLE_SIZE(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))>              \
+  getValues(NAME##Impl) {                                                      \
+    return {MY_ENUM_DETAILS_COMMA_SEP_INTS(                                    \
+        NAME##Impl, MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__),                 \
+        MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};                               \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr size_t getPosition(         \
+      NAME##Impl value) {                                                      \
+    switch (value) {                                                           \
+      BOOST_PP_SEQ_FOR_EACH_I(MY_ENUM_DETAILS_OP_POSITION_ICASE, NAME##Impl,   \
+                              MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                \
+                                  MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))      \
+    }                                                                          \
+    MY_ENUM_ABORT(                                                             \
+        BOOST_PP_STRINGIZE(NAME) " does contain invalid value: {}",            \
+                           MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));  \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD inline MY_ENUM_STRING_VIEW            \
+  getTypeName(NAME##Impl) {                                                    \
+    return BOOST_PP_STRINGIZE(NAME);                                           \
+  }                                                                            \
   }  // namespace enum_wrapper_

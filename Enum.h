@@ -63,6 +63,11 @@
     //
     bool trySetFromString(FooBar& value, string_view str);
 
+    // Sets enum given corresponding string, if string matches case-insensitive
+    // (i.e. "foo" and "Foo" will both match). Returns false otherwise.
+    //
+    bool trySetFromStringCaseInsensitive(FooBar& value, string_view str);
+
     // Return count of enum type. First argument is needed for ADL only.
     //
     constexpr size_t getCount(FooBar) {

@@ -83,3 +83,18 @@ TEST(EnumTest, trySetFromString) {
 //
 // Won't compile, but will trigger an error such as:
 // "error: duplicate case value: 'foo' and 'foo_alias' both equal '2'".
+
+TEST(EnumTest, trySetFromStringCaseInsensitive) {
+  Garage::Autos car;
+  bool isSet = trySetFromStringCaseInsensitive(car, "Van");
+  ASSERT_TRUE(isSet);
+  EXPECT_EQ(car, Garage::Autos::van);
+  isSet = trySetFromStringCaseInsensitive(car, "tRuck");
+  ASSERT_TRUE(isSet);
+  EXPECT_EQ(car, Garage::Autos::truck);
+  isSet = trySetFromStringCaseInsensitive(car, "seDan");
+  ASSERT_TRUE(isSet);
+  EXPECT_EQ(car, Garage::Autos::sedan);
+  isSet = trySetFromStringCaseInsensitive(car, "bikE");
+  ASSERT_FALSE(isSet);
+}
