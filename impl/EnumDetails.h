@@ -186,6 +186,16 @@
                            MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__)(value));  \
   }                                                                            \
                                                                                \
+  MY_ENUM_MAYBE_UNUSED inline std::string tryToString(                         \
+      NAME##Impl value, MY_ENUM_STRING_VIEW defaultIfInvalid) {                \
+    switch (value) {                                                           \
+      BOOST_PP_SEQ_FOR_EACH(MY_ENUM_DETAILS_OP_TO_STRING_CASE, NAME##Impl,     \
+                            MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(                  \
+                                MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__)))        \
+    }                                                                          \
+    return MY_ENUM_STRING_VIEW_TO_STRING(defaultIfInvalid);                    \
+  }                                                                            \
+                                                                               \
   MY_ENUM_MAYBE_UNUSED inline MY_ENUM_STRING_VIEW toStringView(                \
       NAME##Impl value) {                                                      \
     switch (value) {                                                           \

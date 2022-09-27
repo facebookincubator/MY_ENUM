@@ -11,10 +11,12 @@
 #include <string_view>
 
 #define MY_ENUM_STRING_VIEW std::string_view
+#define MY_ENUM_STRING_VIEW_TO_STRING(sv) (std::string(sv))
 
 #else
 #include <fmt/core.h>
 
 #define MY_ENUM_STRING_VIEW fmt::string_view
+#define MY_ENUM_STRING_VIEW_TO_STRING(sv) (std::string(sv.data(), sv.size()))
 
 #endif

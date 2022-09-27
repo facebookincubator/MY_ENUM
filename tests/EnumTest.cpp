@@ -37,6 +37,19 @@ TEST(EnumTest, toString) {
       "pear (=4)");  // since 3+1 is 4, and pear is the successor of banana.
 }
 
+TEST(EnumTest, tryToString) {
+  Fruits fruit1 = Fruits::apple;
+  EXPECT_EQ(tryToString(fruit1, "unknown"), "apple");
+
+  Fruits fruit2{};
+  EXPECT_EQ(tryToString(fruit2, "unknown"), "unknown");
+
+  EXPECT_EQ(tryToString(Fruits::banana, "unknown"), "banana");
+
+  Fruits fruit4 = Fruits::pear;
+  EXPECT_EQ(tryToString(fruit4, "unknown"), "pear");
+}
+
 TEST(EnumTest, StringsAndValues) {
   MY_ENUM_STRING_VIEW typeName = getTypeName(Fruits());
   EXPECT_EQ(typeName, "Fruits");
