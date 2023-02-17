@@ -89,6 +89,11 @@
       return {0, 1};
     }
 
+    // Return elements of enum type. First argument is needed for ADL only.
+    constexpr std::array<FooBar, 2> getElements(FooBar) {
+      return {FooBar::foo, FooBar::bar};
+    }
+
     // Returns the position of enum value in the enum class. This is the inverse
     // of `getValues(FooBar)[i]`.
     constexpr size_t getPosition(FooBar value) {

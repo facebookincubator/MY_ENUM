@@ -170,6 +170,20 @@
       MY_ENUM_DETAILS_OP_INTS, (TYPE, INT_TYPE),                               \
       BOOST_PP_SEQ_POP_FRONT(MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__)))
 
+// Output: , ${TYPE}::${PAIR}[0]
+#define MY_ENUM_DETAILS_OP_ELEMENTS(dummy, TYPE, PAIR) \
+  , TYPE::BOOST_PP_TUPLE_ELEM(0, PAIR)
+
+// Input: (A, (B,5), (C,11))
+// Output: TYPE::A, TYPE::B, TYPE::C
+#define MY_ENUM_DETAILS_COMMA_SEP_ELEMENTS(TYPE, ...)                         \
+  TYPE::BOOST_PP_TUPLE_ELEM(                                                  \
+      0, BOOST_PP_SEQ_ELEM(0, MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__))) \
+      BOOST_PP_SEQ_FOR_EACH(                                                  \
+          MY_ENUM_DETAILS_OP_ELEMENTS, TYPE,                                  \
+          BOOST_PP_SEQ_POP_FRONT(                                             \
+              MY_ENUM_DETAILS_TO_SEQ_OF_TUPLES(__VA_ARGS__)))
+
 #define MY_ENUM_DEF_IMPL(NAME, ...)                                            \
   namespace enum_wrapper_ {                                                    \
   enum class NAME##Impl : MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__){           \
@@ -265,6 +279,13 @@
     return {MY_ENUM_DETAILS_COMMA_SEP_INTS(                                    \
         NAME##Impl, MY_ENUM_DETAILS_GET_INT_TYPE(__VA_ARGS__),                 \
         MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};                               \
+  }                                                                            \
+                                                                               \
+  MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr std::array<                 \
+      NAME##Impl, BOOST_PP_TUPLE_SIZE(MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))>  \
+  getElements(NAME##Impl) {                                                    \
+    return {MY_ENUM_DETAILS_COMMA_SEP_ELEMENTS(                                \
+        NAME##Impl, MY_ENUM_DETAILS_GET_VARS(__VA_ARGS__))};                   \
   }                                                                            \
                                                                                \
   MY_ENUM_MAYBE_UNUSED MY_ENUM_NODISCARD constexpr size_t getPosition(         \

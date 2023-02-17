@@ -68,6 +68,11 @@ TEST(EnumTest, StringsAndValues) {
   EXPECT_EQ(getPosition(Fruits(values[0])), 0);
   EXPECT_EQ(getPosition(Fruits(values[1])), 1);
   EXPECT_EQ(getPosition(Fruits(values[2])), 2);
+
+  std::array<Fruits, 3> elements = getElements(Fruits());
+  EXPECT_EQ(elements[0], Fruits::apple);
+  EXPECT_EQ(elements[1], Fruits::banana);
+  EXPECT_EQ(elements[2], Fruits::pear);
 }
 
 // Enum definition in global scope.
