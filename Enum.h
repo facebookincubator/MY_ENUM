@@ -68,28 +68,28 @@
     //
     bool trySetFromStringCaseInsensitive(FooBar& value, string_view str);
 
-    // Return count of enum type. First argument is needed for ADL only.
+    // Returns count of enum type. First argument is needed for ADL only.
     //
     constexpr size_t getCount(FooBar) {
       return 2;
     }
 
-    // Return string views of enum type. First argument is needed for ADL only.
+    // Returns string views of enum type. First argument is needed for ADL only.
     std::array<string_view, 2> getStrings(FooBar) {
       return {"foo", "bar"};
     }
 
-    // Return string view of enum names. First argument is needed for ADL only.
+    // Returns string view of enum names. First argument is needed for ADL only.
     string_view getStringOfNames(FooBar) {
       return "foo, bar";
     }
 
-    // Return values of enum type. First argument is needed for ADL only.
+    // Returns values of enum type. First argument is needed for ADL only.
     constexpr std::array<int, 2> getValues(FooBar) {
       return {0, 1};
     }
 
-    // Return elements of enum type. First argument is needed for ADL only.
+    // Returns elements of enum type. First argument is needed for ADL only.
     constexpr std::array<FooBar, 2> getElements(FooBar) {
       return {FooBar::foo, FooBar::bar};
     }
@@ -103,7 +103,7 @@
       }
     }
 
-    // Return string representation of type name. First argument is needed for
+    // Returns string representation of type name. First argument is needed for
     // ADL only.
     string_view getTypeName(FooBar) {
       return "FooBar";
