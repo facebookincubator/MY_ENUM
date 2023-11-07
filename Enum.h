@@ -44,6 +44,11 @@
     //
     std::string toString(FooBar value);
 
+    // Returns corresponding string of given value, or `defaultIfInvalid` if the
+    // given value does not correspond to an enum element.
+    //
+    std::string tryToString(FooBar value, string_view defaultIfInvalid);
+
     // Returns corresponding string view of given value
     //
     // Preconditions: value must be a valid enum value, i.e. FooBar::foo, or

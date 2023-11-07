@@ -7,7 +7,7 @@ enum classes.
 
 ## Examples
 
-For example ``MY_ENUM(FooBar, int, (foo, bar));`` defines an enum class
+For example `MY_ENUM(FooBar, int, (foo, bar));` defines an enum class
 
 ```cpp
 enum class FooBar : int {
@@ -25,6 +25,11 @@ with the following free functions:
 //                FooBar::bar.
 //
 std::string toString(FooBar value);
+
+// Returns corresponding string of given value, or `defaultIfInvalid` if the
+// given value does not correspond to an enum element.
+//
+std::string tryToString(FooBar value, string_view defaultIfInvalid);
 
 // Returns corresponding string view of given value
 //
@@ -45,6 +50,11 @@ std::string toPretty(FooBar value);
 //
 bool trySetFromString(FooBar& value, std::string str);
 
+// Sets enum given corresponding string, if string matches case-insensitive
+// (i.e. "foo" and "Foo" will both match). Returns false otherwise.
+//
+bool trySetFromStringCaseInsensitive(FooBar& value, string_view str);
+
 // Returns count of enum type. First argument is needed for ADL only.
 //
 constexpr size_t getCount(FooBar) {
@@ -56,8 +66,8 @@ std::array<string_view, 2> getStrings(FooBar) {
   return {"foo", "bar"};
 }
 
-// Returns string of enum names. First argument is needed for ADL only.
-std::array<string_view, 2> getStrings(FooBar) {
+// Returns string view of enum names. First argument is needed for ADL only.
+string_view getStringOfNames(FooBar) {
   return "foo, bar";
 }
 
@@ -88,14 +98,16 @@ string_view getTypeName(FooBar) {
 ```
 
 ## Requirements
+
 MY_ENUM is a c++ macro library.
-* CMake configuration and build steps are tested on MacOS and Linux.
-* It depends on the BOOST preprocessor library.
-* It depends on a string_view implementation: either std::string_view (c++17),
+
+- CMake configuration and build steps are tested on MacOS and Linux.
+- It depends on the BOOST preprocessor library.
+- It depends on a string_view implementation: either std::string_view (c++17),
   or fmt::string_view from the [{fmt}](https://github.com/fmtlib/fmt) library.
-* MY_ENUM tests depend on [googletest](https://github.com/google/googletest.git)
+- MY_ENUM tests depend on [googletest](https://github.com/google/googletest.git)
   which are pulled in through git sub-modules.
-* The MY_ENUM CliExample depends on
+- The MY_ENUM CliExample depends on
   [CLI11](https://github.com/CLIUtils/CLI11.git).
 
 ## Building MY_ENUM
@@ -134,10 +146,12 @@ make -j2
 ```
 
 ## Join the MY_ENUM community
-* file issues here: [https://github.com/facebook/MY_ENUM/issues](https://github.com/facebook/MY_ENUM/issues)
+
+- file issues here:
+  [https://github.com/facebook/MY_ENUM/issues](https://github.com/facebook/MY_ENUM/issues)
 
 See the [CONTRIBUTING](CONTRIBUTING.md) file for how to help out.
 
-
 ## License
+
 MY_ENUM is MIT licensed, as found in the LICENSE file.
