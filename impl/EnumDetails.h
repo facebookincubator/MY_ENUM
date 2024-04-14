@@ -83,7 +83,7 @@
 //   }
 #define MY_ENUM_DETAILS_OP_TO_STRING_CASE(dummy1, TYPE, PAIR) \
   case TYPE::BOOST_PP_TUPLE_ELEM(0, PAIR): {                  \
-    return BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR));  \
+    return BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR));   \
   }
 
 // Output:
@@ -93,7 +93,7 @@
 //   }
 #define MY_ENUM_DETAILS_OP_TO_PRETTY_CASE(dummy, types, PAIR)         \
   case BOOST_PP_TUPLE_ELEM(0, types)::BOOST_PP_TUPLE_ELEM(0, PAIR): { \
-    return BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR)) + std::string(" (=") +                              \
+    return BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR)) + std::string(" (=") +                               \
         std::to_string(BOOST_PP_TUPLE_ELEM(1, types)(value)) +        \
         std::string(")");                                             \
   }
@@ -103,10 +103,10 @@
 //     value = ${TYPE}::${PAIR}[0];
 //     return true;
 //   }
-#define MY_ENUM_DETAILS_OP_SET_VALUE_CASES(dummy1, TYPE, PAIR)   \
+#define MY_ENUM_DETAILS_OP_SET_VALUE_CASES(dummy1, TYPE, PAIR)  \
   if (str == BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR))) { \
-    value = TYPE::BOOST_PP_TUPLE_ELEM(0, PAIR);                  \
-    return true;                                                 \
+    value = TYPE::BOOST_PP_TUPLE_ELEM(0, PAIR);                 \
+    return true;                                                \
   }
 
 // Output:
@@ -117,7 +117,7 @@
 #define MY_ENUM_DETAILS_OP_SET_VALUE_CASES_CASE_INSENSITIVE(dummy1, TYPE, \
                                                             PAIR)         \
   if (boost::iequals(str.data(),                                          \
-                     BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR)))) { \
+                     BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, PAIR)))) {  \
     value = TYPE::BOOST_PP_TUPLE_ELEM(0, PAIR);                           \
     return true;                                                          \
   }
