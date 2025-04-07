@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include <optional>
 #include <string>
 
 #include <boost/algorithm/string/predicate.hpp>

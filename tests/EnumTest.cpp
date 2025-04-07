@@ -97,6 +97,36 @@ TEST(EnumTest, trySetFromString) {
   ASSERT_FALSE(is_set);
 }
 
+TEST(EnumTest, tryFromString) {
+  {
+    auto car = tryFromString<Garage::Autos>("van");
+    EXPECT_TRUE(car.has_value());
+    EXPECT_EQ(car.value(), Garage::Autos::van);
+  }
+
+  {
+    auto car = tryFromString<Garage::Autos>("truck");
+    ASSERT_TRUE(car.has_value());
+    EXPECT_EQ(car.value(), Garage::Autos::truck);
+  }
+
+  {
+    auto car = tryFromString<Garage::Autos>("sedan");
+    ASSERT_TRUE(car.has_value());
+    EXPECT_EQ(car.value(), Garage::Autos::sedan);
+  }
+
+  {
+    auto car = tryFromString<Garage::Autos>("bike");
+    ASSERT_FALSE(car.has_value());
+  }
+}
+
+TEST(EnumTest, tryFromStringIsCaseSensitive) {
+  auto car = tryFromString<Garage::Autos>("vAn");
+  EXPECT_FALSE(car.has_value());
+}
+
 // MY_ENUM(Foos, ((foo, 2), (foo_alias, 2)));
 //
 // Won't compile, but will trigger an error such as:
@@ -115,4 +145,29 @@ TEST(EnumTest, trySetFromStringCaseInsensitive) {
   EXPECT_EQ(car, Garage::Autos::sedan);
   isSet = trySetFromStringCaseInsensitive(car, "bikE");
   ASSERT_FALSE(isSet);
+}
+
+TEST(EnumTest, tryFromStringCaseInsensitive) {
+  {
+    auto car = tryFromStringCaseInsensitive<Garage::Autos>("Van");
+    ASSERT_TRUE(car.has_value());
+    EXPECT_EQ(car.value(), Garage::Autos::van);
+  }
+
+  {
+    auto car = tryFromStringCaseInsensitive<Garage::Autos>("tRuck");
+    ASSERT_TRUE(car.has_value());
+    EXPECT_EQ(car.value(), Garage::Autos::truck);
+  }
+
+  {
+    auto car = tryFromStringCaseInsensitive<Garage::Autos>("seDan");
+    ASSERT_TRUE(car.has_value());
+    EXPECT_EQ(car.value(), Garage::Autos::sedan);
+  }
+
+  {
+    auto car = tryFromStringCaseInsensitive<Garage::Autos>("bikE");
+    ASSERT_FALSE(car.has_value());
+  }
 }

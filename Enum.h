@@ -117,3 +117,17 @@
 #define MY_ENUM(NAME, ...)       \
   MY_ENUM_DEF(NAME, __VA_ARGS__) \
   MY_ENUM_ALIAS(NAME)
+
+template <typename T>
+std::optional<T> tryFromString(MY_ENUM_STRING_VIEW str) {
+  T value;
+  const bool success = trySetFromString(value, str);
+  return success ? std::optional<T>(value) : std::nullopt;
+}
+
+template <typename T>
+std::optional<T> tryFromStringCaseInsensitive(MY_ENUM_STRING_VIEW str) {
+  T value;
+  const bool success = trySetFromStringCaseInsensitive(value, str);
+  return success ? std::optional<T>(value) : std::nullopt;
+}
