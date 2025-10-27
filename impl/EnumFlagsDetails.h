@@ -89,10 +89,10 @@
 
 // Input: (A, B, C)
 // Output: "A", "B", "C"
-#define MY_ENUMFLAGS_DETAILS_COMMA_SEP_STRINGS(...)       \
-  BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, __VA_ARGS__)) \
-  BOOST_PP_SEQ_FOR_EACH(                                  \
-      MY_ENUMFLAGS_DETAILS_OP_COMMA_STRING, _,            \
+#define MY_ENUMFLAGS_DETAILS_COMMA_SEP_STRINGS(...) \
+  BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, __VA_ARGS__))                                \
+  BOOST_PP_SEQ_FOR_EACH(                            \
+      MY_ENUMFLAGS_DETAILS_OP_COMMA_STRING, _,      \
       BOOST_PP_SEQ_POP_FRONT(BOOST_PP_TUPLE_TO_SEQ(__VA_ARGS__)))
 
 // Output: ", ${STRING}"
@@ -101,10 +101,10 @@
 
 // Input: (A, B, C)
 // Output: "A, B, C"
-#define MY_ENUMFLAGS_DETAILS_CSV_STRING(...)              \
-  BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, __VA_ARGS__)) \
-  BOOST_PP_SEQ_FOR_EACH(                                  \
-      MY_ENUMFLAGS_DETAILS_OP_COMMA_VALUE_STRING, _,      \
+#define MY_ENUMFLAGS_DETAILS_CSV_STRING(...)         \
+  BOOST_PP_STRINGIZE(BOOST_PP_TUPLE_ELEM(0, __VA_ARGS__))                                 \
+  BOOST_PP_SEQ_FOR_EACH(                             \
+      MY_ENUMFLAGS_DETAILS_OP_COMMA_VALUE_STRING, _, \
       BOOST_PP_SEQ_POP_FRONT(BOOST_PP_TUPLE_TO_SEQ(__VA_ARGS__)))
 
 // Output: , uint64_t(${TYPE}::${VAL})
