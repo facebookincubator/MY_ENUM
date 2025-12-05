@@ -10,6 +10,7 @@
 #include <array>
 #include <string>
 #include <type_traits>
+#include <vector>
 
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
